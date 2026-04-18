@@ -20,7 +20,13 @@
 #include <unistd.h>
 #include <netdb.h>
 #include <sys/poll.h>
+#if defined(__linux__)
 #include <linux/types.h> /* __be64 */
+#else
+#include <sys/types.h>
+#include <sys/endian.h>  /* be64toh */
+typedef uint64_t __be64;
+#endif
 
 #include <infiniband/mad.h>
 #include <infiniband/umad.h>
