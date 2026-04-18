@@ -9,6 +9,7 @@
 #endif
 
 #include <common/test.h>
+#include <signal.h>
 
 class test_watchdog : public ucs::test {
 public:

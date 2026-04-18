@@ -13,6 +13,10 @@
 #include <ucs/config/global_opts.h>
 #include <ucs/config/parser.h>
 
+#include <pthread.h>
+#include <signal.h>
+#include <sys/wait.h>
+
 #include <unistd.h>
 #include <sstream>
 
