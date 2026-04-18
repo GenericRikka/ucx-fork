@@ -122,6 +122,7 @@ int ucm_orig_shmdt(const void *shmaddr)
         /* Using IPC syscall of shmdt implementation */
         return syscall(SYS_ipc, IPCOP_shmdt, 0, 0, 0, shmaddr);
     }
+#ifdef HAVE_BRK_SBRK
 }
 
 #endif
@@ -164,6 +165,31 @@ void *ucm_orig_sbrk(intptr_t increment)
                (void*)-1 : prev;
     }
 }
+#else
+int ucm_orig_brk(void *addr)
+{
+    (void)addr;
+    errno = ENOSYS;
+    return -1;
+}
+
+void *ucm_orig_sbrk(intptr_t increment)
+{
+    (void)increment;
+    errno = ENOSYS;
+    return MAP_FAILED;
+}
+
+int ucm_override_brk(void *addr)
+{
+    return ucm_orig_brk(addr);
+}
+
+void *ucm_override_sbrk(intptr_t increment)
+{
+    return ucm_orig_sbrk(increment);
+}
+#endif
 
 #else /* UCM_BISTRO_HOOKS */
 
@@ -176,9 +202,13 @@ UCM_DEFINE_DLSYM_FUNC(shmdt, int, const void*)
 
 void *ucm_get_current_brk()
 {
+#ifdef HAVE_BRK_SBRK
 #if HAVE___CURBRK
     return __curbrk;
 #else
     return ucm_brk_syscall(0);
+#endif
+#else
+    return NULL;
 #endif
 }
