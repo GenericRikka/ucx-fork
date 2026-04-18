@@ -108,7 +108,7 @@ void *ucm_brk_syscall(void *addr);
 /**
  * @return System thread id of the current thread.
  */
-pid_t ucm_get_tid();
+pid_t ucm_get_tid(void);
 
 
 /**
