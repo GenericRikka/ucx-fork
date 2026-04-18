@@ -91,6 +91,9 @@ AS_IF([test "x$mmap_hooks_happy" = "xyes"],
       AS_IF([test "x$ipc_hooks_happy" = "xyes" -o "x$shm_hooks_happy" = "xyes"],
             [bistro_hooks_happy=yes]))
 
+AS_IF([test "x$ac_cv_func_brk" != "xyes" -o "x$ac_cv_func_sbrk" != "xyes"],
+      [bistro_hooks_happy=no])
+
 AS_IF([test "x$bistro_hooks_happy" = "xyes"],
       [AC_DEFINE([UCM_BISTRO_HOOKS], [1], [Enable BISTRO hooks])],
       [AC_DEFINE([UCM_BISTRO_HOOKS], [0], [Enable BISTRO hooks])

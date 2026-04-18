@@ -55,8 +55,10 @@ SUBDIRS += \
 	cmake \
 	config
 
+if BUILD_GTEST
 if HAVE_GTEST
 SUBDIRS += test/gtest
+endif
 endif
 
 if HAVE_MPICC
