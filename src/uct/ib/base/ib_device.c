@@ -30,6 +30,14 @@
 #ifdef HAVE_NETLINK_RDMA
 #include <rdma/rdma_netlink.h>
 #endif
+#ifndef s6_addr32
+#  if defined(__FreeBSD__)
+#    define s6_addr32 __u6_addr.__u6_addr32
+#  elif defined(__linux__)
+#    define s6_addr32 u6_addr.u6_addr32
+#  endif
+#endif
+
 
 
 /* This table is according to "Encoding for RNR NAK Timer Field"
