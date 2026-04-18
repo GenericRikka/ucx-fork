@@ -14,7 +14,11 @@ DISTCLEANFILES = build_config.h
 # Produce a C header file which contains all defined variables from config.h
 #
 build_config.h: $(top_builddir)/config.h Makefile
-	$(SED) -nr 's:\s*#define\s+(\w+)(\s+(\w+)|\s+(".*")|\s*)$$:{"\1", UCS_PP_MAKE_STRING(\3\4)},:p' <$(top_builddir)/config.h >$@
+	$(SED) -nE \
+	  -e 's/^[[:space:]]*#define[[:space:]]+([A-Za-z_][A-Za-z_0-9]*)[[:space:]]+(".*")$$/{"\1", UCS_PP_MAKE_STRING(\2)},/p' \
+	  -e 's/^[[:space:]]*#define[[:space:]]+([A-Za-z_][A-Za-z0-9_]*)[[:space:]]+([^[:space:]]+)$$/{"\1", UCS_PP_MAKE_STRING(\2)},/p' \
+	  -e 's/^[[:space:]]*#define[[:space:]]+([A-Za-z_][A-Za-z0-9_]*)$$/{"\1", ""},/p' \
+	  <$(top_builddir)/config.h >$@
 
 ucx_info_CPPFLAGS  = $(BASE_CPPFLAGS)
 ucx_info_CFLAGS    = $(BASE_CFLAGS)
