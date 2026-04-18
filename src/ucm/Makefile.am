@@ -21,8 +21,6 @@ nobase_dist_libucm_la_HEADERS = \
 
 noinst_HEADERS = \
 	event/event.h \
-	malloc/malloc_hook.h \
-	malloc/allocator.h \
 	mmap/mmap.h \
 	util/khash_safe.h \
 	util/replace.h \
@@ -38,7 +36,6 @@ noinst_HEADERS = \
 
 libucm_la_SOURCES = \
 	event/event.c \
-	malloc/malloc_hook.c \
 	mmap/install.c \
 	util/replace.c \
 	util/log.c \
@@ -49,6 +46,17 @@ libucm_la_SOURCES = \
 	bistro/bistro_aarch64.c \
 	bistro/bistro_ppc64.c \
 	bistro/bistro_rv64.c
+
+if HAVE_UCM_MALLOC_HOOKS
+noinst_HEADERS += \
+	malloc/malloc_hook.h \
+	malloc/allocator.h
+
+libucm_la_SOURCES += \
+	malloc/malloc_hook.c
+else
+libucm_la_SOURCES += \
+        malloc/malloc_hook_stub.c
 
 if HAVE_UCM_PTMALLOC286
 libucm_la_CPPFLAGS += \
@@ -61,5 +69,12 @@ libucm_la_SOURCES += \
 
 noinst_HEADERS += \
     ptmalloc286/malloc-2.8.6.h
+endif
+endif
+
+if HAVE_BRK_SBRK
+else
+libucm_la_SOURCES += \
+        malloc/brk_sbrk_override_stub.c
 endif
 
